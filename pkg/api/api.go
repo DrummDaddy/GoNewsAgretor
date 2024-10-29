@@ -14,16 +14,19 @@ type API struct {
 	r  *mux.Router
 }
 
+// Конструктор API
 func New(db *storage.DB) *API {
 	a := API{db: db, r: mux.NewRouter()}
 	a.endpoints()
 	return &a
 }
 
+// Возвращаем маршрутизатор в качестве аргумента HTTP-сервера
 func (api *API) Router() *mux.Router {
 	return api.r
 }
 
+// Регистрируем методы API
 func (api *API) endpoints() {
 	api.r.HandleFunc("/news/{n}", api.posts).Methods(http.MethodGet, http.MethodOptions)
 

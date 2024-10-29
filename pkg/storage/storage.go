@@ -20,6 +20,7 @@ type Post struct {
 	Content string // содержимое публикации
 	PubTime int64  // время публикации
 	Link    string // ссылка на источник
+
 }
 
 func New() (*DB, error) {
