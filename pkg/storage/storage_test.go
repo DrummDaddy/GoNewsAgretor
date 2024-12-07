@@ -30,7 +30,7 @@ func TestDB_News(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	news, err := db.News(2)
+	news, err := db.NewsWithPagination(1, 2, "")
 	if err != nil {
 		t.Fatal(err)
 	}

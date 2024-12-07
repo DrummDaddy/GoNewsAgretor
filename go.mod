@@ -11,6 +11,7 @@ require (
 )
 
 require (
+	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
 	github.com/grokify/html-strip-tags-go v0.1.0
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect

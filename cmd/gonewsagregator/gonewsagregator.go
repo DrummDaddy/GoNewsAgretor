@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"GoNewsAgregator/pkg/api"
+	"GoNewsAgregator/pkg/middleware"
 	"GoNewsAgregator/pkg/rss"
 	"GoNewsAgregator/pkg/storage"
 )
@@ -58,6 +59,9 @@ func main() {
 			log.Println("ошибка:", err)
 		}
 	}()
+
+	api.Router().Use(middleware.RequestIDMiddleware)
+	api.Router().Use(middleware.Logger)
 
 	// запуск веб-сервера с API и приложением
 	err = http.ListenAndServe(":80", api.Router())

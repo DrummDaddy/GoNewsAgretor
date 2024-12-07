@@ -5,6 +5,7 @@ import (
 	"errors"
 	"os"
 
+	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
@@ -54,19 +55,25 @@ func (db *DB) StoreNews(news []Post) error {
 	return nil
 }
 
-// News возвращает последние новости из БД
-func (db *DB) News(n int) ([]Post, error) {
-	if n == 0 {
-		n = 10
+// NewsWithPagination возвращает новости с поддержкой фильтрации и пагинации
+func (db *DB) NewsWithPagination(page, pageSize int, titleFilter string) ([]Post, error) {
+	if pageSize <= 0 {
+		pageSize = 10
 	}
-	rows, err := db.pool.Query(context.Background(),
-		`SELECT id, title, content, pub_time, link FROM news ORDER BY pub_time DESC LIMIT $1`,
-		n,
-	)
+	offset := (page - 1) * pageSize
+	var rows pgx.Rows
+	var err error
+
+	query := `SELECT id, title, content, pub_time, link FROM news 
+              WHERE title ILIKE '%' || $1 || '%' 
+              ORDER BY pub_time DESC 
+              LIMIT $2 OFFSET $3`
+	rows, err = db.pool.Query(context.Background(), query, titleFilter, pageSize, offset)
+
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close() // Не забудьте закрыть rows
+	defer rows.Close()
 
 	var news []Post
 	for rows.Next() {

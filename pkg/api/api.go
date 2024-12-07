@@ -42,7 +42,7 @@ func (api *API) posts(w http.ResponseWriter, r *http.Request) {
 	}
 	s := mux.Vars(r)["n"]
 	n, _ := strconv.Atoi(s)
-	news, err := api.db.News(n)
+	news, err := api.db.NewsWithPagination(n, 1, "")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
